@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Outbound SSO Test Page</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    pre { background: #f4f4f4; padding: 1em; border-radius: 5px; }
+    .section { margin-bottom: 2em; }
+  </style>
+</head>
+<body>
+
+  <h1>Outbound SSO Test Page</h1>
+
+  <div class="section">
+    <h2>1. Incoming URL Parameters</h2>
+    <pre id="paramsDisplay">Loading...</pre>
+  </div>
+
+  <div class="section">
+    <h2>2. Constructed Vendor URL</h2>
+    <pre id="vendorUrlDisplay">Generating...</pre>
+  </div>
+
+  <div class="section">
+    <h2>3. Attempting to Open Vendor URL in Native Browser...</h2>
+    <p>If successful, the device's default browser should launch shortly.</p>
+  </div>
+
+  <script>
+    // Step 1: Parse the URL params
+    const params = new URLSearchParams(window.location.search);
+    const paramObject = {};
+    for (const [key, value] of params.entries()) {
+      paramObject[key] = value;
+    }
+
+    // Show the incoming data
+    document.getElementById('paramsDisplay').textContent = JSON.stringify(paramObject, null, 2);
+
+    // Step 2: Create a mock vendor URL with token
+    const mockVendorBase = "https://vendor.example.com/sso";
+    const token = paramObject['token'] || "mock-token";
+    const vendorUrl = `${mockVendorBase}?auth=${encodeURIComponent(token)}`;
+
+    // Show the vendor URL
+    document.getElementById('vendorUrlDisplay').textContent = vendorUrl;
+
+    // Step 3: Try to postMessage to open in native browser
+    setTimeout(() => {
+      if (typeof ht !== 'undefined' && ht.postMessage) {
+        ht.postMessage({
+          type: 'WEBVIEW__openInNativeBrowser',
+          url: vendorUrl
+        });
+      } else {
+        console.warn('ht.postMessage not available – likely not running inside the mobile app webview.');
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
+
