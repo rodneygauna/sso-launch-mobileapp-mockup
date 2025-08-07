@@ -23,7 +23,7 @@ if [ -f "$CERT_PATH/fullchain.pem" ] && [ -f "$CERT_PATH/privkey.pem" ]; then
     chmod 600 "$CERTS_DIR/localhost-key.pem"
 
     # Restart Docker container to use new certificates
-    docker-compose restart
+    sudo docker compose restart
 
     echo "Certificate renewed and container restarted successfully!"
 else

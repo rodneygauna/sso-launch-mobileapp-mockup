@@ -80,7 +80,7 @@ read -p "Press Enter when DNS is configured and port 80 is accessible..."
 
 # Stop any running containers that might be using port 80
 echo "Stopping any running containers..."
-docker-compose down 2>/dev/null || true
+sudo docker compose down 2>/dev/null || true
 
 # Generate certificate using standalone method
 echo "Generating Let's Encrypt certificate for $DOMAIN..."
@@ -120,7 +120,7 @@ fi
 
 # Set up automatic renewal
 echo "Setting up automatic certificate renewal..."
-echo "0 12 * * * /usr/bin/certbot renew --quiet --post-hook 'docker-compose restart'" | sudo crontab -
+echo "0 12 * * * /usr/bin/certbot renew --quiet --post-hook 'sudo docker compose restart'" | sudo crontab -
 
 echo ""
 echo "=== Setup Complete! ==="
@@ -129,8 +129,8 @@ echo "✅ Automatic renewal configured (daily check at 12:00)"
 echo "✅ Certificates copied to ./certs directory"
 echo ""
 echo "Next steps:"
-echo "1. Run 'docker-compose up --build' to start the HTTPS server"
-echo "2. Access your site at https://$DOMAIN:1443"
+echo "1. Run 'sudo docker compose up --build' to start the HTTPS server"
+echo "2. Access your site at https://$DOMAIN"
 echo ""
 echo "Certificate details:"
 echo "- Valid for: $DOMAIN"

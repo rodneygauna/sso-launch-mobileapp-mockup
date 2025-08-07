@@ -17,7 +17,7 @@ fi
 if [ -f "$CERT_FILE" ] && [ -f "$KEY_FILE" ]; then
     echo "✅ Certificate files exist"
     echo "✅ Starting Docker..."
-    docker-compose up --build
+    sudo docker compose up --build
 else
     echo "❌ Failed to create certificate files"
     echo "Run './fix-certs.sh' manually and try again"
