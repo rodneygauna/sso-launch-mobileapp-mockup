@@ -28,6 +28,10 @@
     <p>If successful, the device's default browser should launch shortly.</p>
   </div>
 
+  <div class="section">
+	  <button onclick="openInNativeBrowser()">Open in Native Browser</button>
+  </div>
+
   <script>
     // Step 1: Parse the URL params
     const params = new URLSearchParams(window.location.search);
@@ -48,16 +52,17 @@
     document.getElementById('vendorUrlDisplay').textContent = vendorUrl;
 
     // Step 3: Try to postMessage to open in native browser
-    setTimeout(() => {
-      if (typeof ht !== 'undefined' && ht.postMessage) {
-        ht.postMessage({
-          type: 'WEBVIEW__openInNativeBrowser',
-          url: vendorUrl
+    function openInNativeBrowser() {
+      const ssoUrl = "https://vendor.com/sso?token=YOUR_GENERATED_TOKEN";
+
+      ht.postMessage({
+        type: 'WEBVIEW__openInNativeBrowser', url: ssoUrl
         });
-      } else {
-        console.warn('ht.postMessage not available – likely not running inside the mobile app webview.');
-      }
-    }, 1000);
+    }
+	     // Call the function when the DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+      openInNativeBrowser();
+    });
   </script>
 
 </body>
