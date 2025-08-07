@@ -10,7 +10,45 @@ A mockup application for testing SSO launch functionality with HTTPS support.
 
 ## HTTPS Setup
 
-This project uses [mkcert](https://github.com/FiloSottile/mkcert) to generate locally trusted SSL certificates for development.
+This project supports two SSL certificate options:
+
+### Option 1: Let's Encrypt (Recommended for Production)
+
+For production use with real, trusted SSL certificates:
+
+#### Prerequisites for Let's Encrypt
+
+- Your domain must point to the server's public IP address
+- Port 80 must be accessible from the internet
+- Port 443 must be accessible from the internet
+
+#### Setup
+
+1. **Edit the domain in the script**:
+   - Open `setup-letsencrypt.sh`
+   - Change `DOMAIN="dev.rodney.codes"` to your domain
+   - Change `EMAIL="rodney@rodney.codes"` to your email
+
+2. **Run the Let's Encrypt setup**:
+
+   ```bash
+   chmod +x setup-letsencrypt.sh
+   ./setup-letsencrypt.sh
+   ```
+
+3. **Start the application**:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access your site**:
+   - **HTTPS**: <https://yourdomain.com>
+   - **HTTP** (redirects): <http://yourdomain.com>
+
+### Option 2: mkcert (For Local Development)
+
+For local development with self-signed certificates:
 
 ### First-time setup
 

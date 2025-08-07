@@ -3,11 +3,10 @@ services:
     image: nginx:alpine
     container_name: sso-test-web
     ports:
-      - "1030:80"   # HTTP (will redirect to HTTPS)
-      - "1443:443"  # HTTPS
+      - "80:80" # HTTP (will redirect to HTTPS)
+      - "443:443" # HTTPS (standard port)
     volumes:
       - ./html:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs/localhost.pem:/etc/ssl/certs/localhost.pem:ro
       - ./certs/localhost-key.pem:/etc/ssl/private/localhost-key.pem:ro
-
