@@ -5,7 +5,7 @@ A mockup application for testing SSO launch functionality with HTTPS support.
 ## Prerequisites
 
 - Docker and Docker Compose
-- PowerShell (Windows)
+- PowerShell (Windows) or Bash (Ubuntu/Linux)
 - Internet connection (for downloading mkcert)
 
 ## HTTPS Setup
@@ -14,21 +14,33 @@ This project uses [mkcert](https://github.com/FiloSottile/mkcert) to generate lo
 
 ### First-time setup
 
+#### Windows
+
 1. **Generate SSL certificates** (run as Administrator if using Chocolatey):
 
    ```powershell
    .\generate-certs.ps1
    ```
 
-   This script will:
-   - Install mkcert via Chocolatey (if not already installed)
-   - Create a local Certificate Authority
-   - Generate SSL certificates for localhost
-   - Place certificates in the `./certs` directory
+#### Ubuntu/Linux
 
-2. **Start the application**:
+1. **Make the script executable and generate SSL certificates**:
 
-   ```powershell
+   ```bash
+   chmod +x generate-certs.sh
+   ./generate-certs.sh
+   ```
+
+Both scripts will:
+
+- Install mkcert (if not already installed)
+- Create a local Certificate Authority
+- Generate SSL certificates for localhost
+- Place certificates in the `./certs` directory
+
+1. **Start the application**:
+
+   ```bash
    docker-compose up --build
    ```
 
