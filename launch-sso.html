@@ -72,58 +72,22 @@
         // Use the constructed vendor URL instead of hardcoded URL
         const ssoUrl = vendorUrl;
 
-        // Check if ht object exists (mobile app context)
-        if (typeof ht !== "undefined" && ht.postMessage) {
-          ht.postMessage({
+        // Open in native browser
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
             type: "WEBVIEW__OPEN_IN_NATIVE_BROWSER",
             url: ssoUrl,
-          });
-        } else {
-          // Fallback for testing in regular browser
-          console.log("Would open in native browser:", ssoUrl);
-          window.open(ssoUrl, "_blank");
-        }
+          })
+        );
+        //   window.ReactNativeWebView.postMessage(JSON.stringify({
+        //     type: "WEBVIEW__GO_BACK"
+        //   }));
       }
 
-      // Initialize the page when the DOM is fully loaded
+      // Call openInNativeBrowser when the DOM is fully loaded
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("Page loaded and ready");
-        // Auto-trigger on page load
-        autoTriggerNativeBrowser();
+        openInNativeBrowser();
       });
-
-      // Also trigger when window fully loads (including images, etc.)
-      window.addEventListener("load", function () {
-        console.log("Window fully loaded");
-        // Small delay to ensure everything is ready
-        setTimeout(autoTriggerNativeBrowser, 100);
-      });
-
-      // Auto-trigger function with mobile device detection
-      function autoTriggerNativeBrowser() {
-        // Check if this is a mobile device
-        const isMobile =
-          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          );
-
-        // Check if we're in a webview (common mobile app indicators)
-        const isWebView =
-          typeof ht !== "undefined" || // Your specific webview object
-          window.navigator.userAgent.includes("wv") || // Android WebView
-          (window.navigator.userAgent.includes("Version/") &&
-            window.navigator.userAgent.includes("Mobile")); // iOS WebView
-
-        console.log("Device detection:", { isMobile, isWebView });
-
-        // Auto-trigger only on mobile devices or in webview
-        if (isMobile || isWebView) {
-          console.log("Auto-triggering native browser on mobile device");
-          openInNativeBrowser();
-        } else {
-          console.log("Desktop detected - manual trigger required");
-        }
-      }
     </script>
   </body>
 </html>
