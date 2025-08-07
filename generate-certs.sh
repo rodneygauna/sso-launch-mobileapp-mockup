@@ -76,7 +76,7 @@ mkcert -install
 # Generate certificates for localhost and 127.0.0.1
 echo "Generating SSL certificates..."
 # Generate certificates in the current directory first, then move them
-mkcert -cert-file "$CERTS_DIR/localhost.pem" -key-file "$CERTS_DIR/localhost-key.pem" localhost 127.0.0.1
+mkcert -cert-file "$CERTS_DIR/localhost.pem" -key-file "$CERTS_DIR/localhost-key.pem" localhost 127.0.0.1 dev.rodney.codes
 
 # Check if certificates were created successfully
 if [ -f "$CERTS_DIR/localhost.pem" ] && [ -f "$CERTS_DIR/localhost-key.pem" ]; then
@@ -89,7 +89,7 @@ else
     # Alternative method: generate in temp location and copy
     TEMP_DIR=$(mktemp -d)
     cd "$TEMP_DIR"
-    mkcert localhost 127.0.0.1
+    mkcert localhost 127.0.0.1 dev.rodney.codes
 
     # Find and copy the generated files
     CERT_FILE=$(find . -name "*localhost+1.pem" ! -name "*-key.pem" | head -1)
