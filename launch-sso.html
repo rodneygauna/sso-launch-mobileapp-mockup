@@ -71,7 +71,7 @@
         // Check if ht object exists (mobile app context)
         if (typeof ht !== "undefined" && ht.postMessage) {
           ht.postMessage({
-            type: "WEBVIEW__openInNativeBrowser",
+            type: "WEBVIEW__OPEN_IN_NATIVE_BROWSER",
             url: ssoUrl,
           });
         } else {
@@ -83,8 +83,9 @@
 
       // Initialize the page when the DOM is fully loaded
       document.addEventListener("DOMContentLoaded", function () {
-        // Don't automatically open - let user click the button
         console.log("Page loaded and ready");
+        openInNativeBrowser();
+        history.back();
       });
     </script>
   </body>
