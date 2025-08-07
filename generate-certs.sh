@@ -66,29 +66,46 @@ if [ ! -d "$CERTS_DIR" ]; then
     echo "Created certs directory"
 fi
 
+# Ensure proper permissions on certs directory
+chmod 755 "$CERTS_DIR"
+
 # Install the local CA (this creates the root certificate)
 echo "Installing local CA..."
 mkcert -install
 
 # Generate certificates for localhost and 127.0.0.1
 echo "Generating SSL certificates..."
-cd "$CERTS_DIR"
-mkcert localhost 127.0.0.1
-cd ..
+# Generate certificates in the current directory first, then move them
+mkcert -cert-file "$CERTS_DIR/localhost.pem" -key-file "$CERTS_DIR/localhost-key.pem" localhost 127.0.0.1
 
-# Rename the generated files to standard names
-CERT_FILES=(./certs/localhost+1*.pem)
-if [ ${#CERT_FILES[@]} -ge 2 ]; then
-    # Find the certificate file (not the key)
-    for file in "${CERT_FILES[@]}"; do
-        if [[ "$file" == *"localhost+1.pem" && "$file" != *"-key.pem" ]]; then
-            mv "$file" "./certs/localhost.pem"
-            echo "Renamed certificate file to localhost.pem"
-        elif [[ "$file" == *"localhost+1-key.pem" ]]; then
-            mv "$file" "./certs/localhost-key.pem"
-            echo "Renamed key file to localhost-key.pem"
-        fi
-    done
+# Check if certificates were created successfully
+if [ -f "$CERTS_DIR/localhost.pem" ] && [ -f "$CERTS_DIR/localhost-key.pem" ]; then
+    echo "Certificates generated successfully!"
+    echo "Certificate: $CERTS_DIR/localhost.pem"
+    echo "Private key: $CERTS_DIR/localhost-key.pem"
+else
+    echo "ERROR: Failed to generate certificates. Trying alternative method..."
+
+    # Alternative method: generate in temp location and copy
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+    mkcert localhost 127.0.0.1
+
+    # Find and copy the generated files
+    CERT_FILE=$(find . -name "*localhost+1.pem" ! -name "*-key.pem" | head -1)
+    KEY_FILE=$(find . -name "*localhost+1-key.pem" | head -1)
+
+    if [ -n "$CERT_FILE" ] && [ -n "$KEY_FILE" ]; then
+        cp "$CERT_FILE" "$(dirname "$0")/$CERTS_DIR/localhost.pem"
+        cp "$KEY_FILE" "$(dirname "$0")/$CERTS_DIR/localhost-key.pem"
+        echo "Certificates copied successfully!"
+    else
+        echo "ERROR: Could not generate certificates"
+        exit 1
+    fi
+
+    cd "$(dirname "$0")"
+    rm -rf "$TEMP_DIR"
 fi
 
 echo ""
