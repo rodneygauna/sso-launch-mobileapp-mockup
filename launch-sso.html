@@ -72,20 +72,24 @@
         // Use the constructed vendor URL instead of hardcoded URL
         const ssoUrl = vendorUrl;
 
-        // Open in native browser
+        // Check if ht object exists (mobile app context)
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: "WEBVIEW__OPEN_IN_NATIVE_BROWSER",
             url: ssoUrl,
           })
         );
-        //   window.ReactNativeWebView.postMessage(JSON.stringify({
-        //     type: "WEBVIEW__GO_BACK"
-        //   }));
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "WEBVIEW__GO_BACK",
+          })
+        );
       }
 
-      // Call openInNativeBrowser when the DOM is fully loaded
+      // Initialize the page when the DOM is fully loaded
       document.addEventListener("DOMContentLoaded", function () {
+        console.log("Page loaded and ready");
+        // Auto-trigger on page load
         openInNativeBrowser();
       });
     </script>
